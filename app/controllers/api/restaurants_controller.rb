@@ -1,10 +1,16 @@
 class Api::RestaurantsController < ApplicationController
   before_action :set_restaurant, only: [:show]
+  before_action :this_dish, only: [:index]
 
   def index
-    @restaurants = Restaurant.all
+    if params['dish_id'].present?
+      @restaurants = Restaurant.where(:dish_id => @current_dish.ids)
+    else
+      @restaurants = Restaurant.all
+    end
 
-    render json: @restaurants
+    render json: @restaurants.to_json(:except => [:created_at, :updated_at, :restaurant_id])
+
   end
 
   def create
@@ -17,7 +23,7 @@ class Api::RestaurantsController < ApplicationController
   end
 
   def show
-    render json: @restaurant
+    render json: @restaurant.to_json(:except => [:created_at, :updated_at])
   end
 
   private
@@ -28,6 +34,12 @@ class Api::RestaurantsController < ApplicationController
 
   def restaurant_params
     params.require(:restaurant).permit(:name)
+  end
+
+  def this_dish
+    return if params['dish_id'].blank?
+    dish_id = params['dish_id']
+    @current_dish = Dish.where(id: dish_id)
   end
 
 end

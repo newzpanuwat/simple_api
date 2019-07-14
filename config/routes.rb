@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
   namespace :api do
-    resources :restaurants
+    resources :restaurants, except: [:destroy, :update] do
+      resources :dishes, only: [:index]
+    end
   end
 
   namespace :api do
-    resources :dishes
+    resources :dishes, except: [:destroy, :update] do
+      resources :restaurants, only: [:index]
+    end
   end
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
