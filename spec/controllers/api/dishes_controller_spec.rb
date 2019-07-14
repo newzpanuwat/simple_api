@@ -8,8 +8,14 @@ RSpec.describe Api::DishesController, type: :controller do
 
   describe "GET" do
     before do
-      dish1
-      dish2
+      dish1.restaurant_id = 1
+      dish1.save
+
+      dish2.restaurant_id = 1
+      dish1.save
+
+      restaurant1.dish_id = 1
+      restaurant1.save
     end
 
     describe "#index" do
@@ -20,6 +26,19 @@ RSpec.describe Api::DishesController, type: :controller do
   
       it "should render dishes correctly" do
         get :index
+        result = JSON.parse(response.body)
+        data = [
+          { id: 1, name: dish1.name },
+          { id: 2, name: dish2.name }
+        ]
+        expect(result['dishes'].to_json).to eq(data.to_json)
+        expect(response.successful?).to eq(true)
+      end
+
+      it "should render dishes of restaurants correctly" do
+        get :index, params: {
+          restaurant_id: 1
+        }
         result = JSON.parse(response.body)
         data = [
           { id: 1, name: dish1.name },
