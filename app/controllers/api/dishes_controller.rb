@@ -9,20 +9,11 @@ class Api::DishesController < ApplicationController
       @dishes = Dish.all
     end
     
-    render json: @dishes.to_json(:except => [:created_at, :updated_at])
-  end
-
-  def create
-    @dish = Dish.new(dish_params)
-    if @dish.save
-      render json: @dish, status: created
-    else
-      render json: @dish.errors.full_messages, status: unprocessable_entity
-    end
+    render json: { dishes: @dishes.as_json(:except => [:created_at, :updated_at, :restaurant_id]), status: 200 }
   end
 
   def show
-    render json: @dish.to_json(:except => [:created_at, :updated_at, :restaurant_id])
+    render json: { dish: @dish.as_json(:except => [:created_at, :updated_at, :restaurant_id]), status: 200 }
   end
 
 
@@ -30,10 +21,6 @@ class Api::DishesController < ApplicationController
 
   def set_dish
     @dish = Dish.find(params[:id])
-  end
-
-  def dish_params
-    params.require(:dish).permit(:name)
   end
 
   def this_restaurant

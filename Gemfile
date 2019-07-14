@@ -34,6 +34,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8'
   gem 'shoulda-matchers'
   gem 'factory_bot_rails'
+  gem 'rails-controller-testing'
   # Gem below added for debugging
   gem 'better_errors'
   gem 'binding_of_caller'

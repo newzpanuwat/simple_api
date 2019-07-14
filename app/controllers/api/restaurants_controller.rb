@@ -8,32 +8,18 @@ class Api::RestaurantsController < ApplicationController
     else
       @restaurants = Restaurant.all
     end
+    render json: { restaurants: @restaurants.as_json(:except => [:created_at, :updated_at, :dish_id]), status: 200 } 
 
-    render json: @restaurants.to_json(:except => [:created_at, :updated_at, :restaurant_id])
-
-  end
-
-  def create
-    @restaurant = Restaurant.new(restaurant_params)
-    if @restaurant.save
-      render json: @restaurant, status: created
-    else
-      render json: @restaurant.errors.full_messages, status: unprocessable_entity
-    end
   end
 
   def show
-    render json: @restaurant.to_json(:except => [:created_at, :updated_at])
+    render json: { restaurant: @restaurant.as_json(:except => [:created_at, :updated_at, :dish_id]), status: 200 }
   end
 
   private
 
   def set_restaurant
     @restaurant = Restaurant.find(params[:id])
-  end
-
-  def restaurant_params
-    params.require(:restaurant).permit(:name)
   end
 
   def this_dish
